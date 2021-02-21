@@ -42,11 +42,12 @@ new ProductImage("water can", "images/water-can.jpg");
 new ProductImage("chair", "images/chair.jpg"); 
 new ProductImage("wine glass", "images/wine-glass.jpg"); 
 
-
+// get random 
 function generateRandomIndex() {
     return Math.floor(Math.random() * ProductImage.allImages.length);
 }
 
+// render three images
 function renderThreeImages() {
 
     leftImageindex =generateRandomIndex();
@@ -71,10 +72,6 @@ function renderThreeImages() {
 renderThreeImages();
 
 //handle clicking 
-
-// leftimage.addEventListener('click',handleUSerClick);
-// middleimage.addEventListener('click',handleUSerClick);
-// rightimage.addEventListener('click',handleUSerClick);
 imagecontainer.addEventListener('click',handleUSerClick);
 
 function handleUSerClick (event) {
@@ -99,15 +96,12 @@ function handleUSerClick (event) {
         list.appendChild(btn);
         btn.textContent = "View Results";
         btn.addEventListener('click',trigger)
-        // rightimage.removeEventListener('click',handleUSerClick);
-        // leftimage.removeEventListener('click',handleUSerClick);
-        // middleimage.removeEventListener('click',handleUSerClick)
         imagecontainer.removeEventListener('click',handleUSerClick);
 
     }
 }
 
-
+// This function will be triggered when clicked on the above created button after 25 times are completed
 function trigger() {
     for (let i = 0;i<ProductImage.allImages.length;i++) {
         prodResult = document.createElement('li')
