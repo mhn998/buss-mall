@@ -12,16 +12,17 @@ let rightImageindex;
 let prodResult; 
 let list;
 
-
+// constructor function
 function ProductImage (name,source) {
     this.name = name;
     this.source = source;
-    this.votes=0
-    this.views = 0
+    this.votes=0;
+    this.views = 0;
     ProductImage.allImages.push(this);
 }
 
 ProductImage.allImages=[];
+
 
 new ProductImage("bag", "images/bag.jpg"); 
 new ProductImage("banana", "images/banana.jpg"); 
@@ -41,6 +42,9 @@ new ProductImage("usb", "images/usb.gif");
 new ProductImage("water can", "images/water-can.jpg"); 
 new ProductImage("chair", "images/chair.jpg"); 
 new ProductImage("wine glass", "images/wine-glass.jpg"); 
+
+
+// console.log(ProductImage.allImages);
 
 // get random 
 function generateRandomIndex() {
@@ -101,11 +105,61 @@ function handleUSerClick (event) {
     }
 }
 
+
+let ArrNames = [];
+let ArrVotes =[];
+let ArrViews =[];
 // This function will be triggered when clicked on the above created button after 25 times are completed
 function trigger() {
     for (let i = 0;i<ProductImage.allImages.length;i++) {
-        prodResult = document.createElement('li')
-        list.appendChild(prodResult);
-        prodResult.textContent = ProductImage.allImages[i].name + ' had ' + ProductImage.allImages[i].votes + ' votes, and was seen ' + ProductImage.allImages[i].views + ' times ' ;
+        // Old Code
+        // prodResult = document.createElement('li')
+        // list.appendChild(prodResult);
+        // prodResult.textContent = ProductImage.allImages[i].name + ' had ' + ProductImage.allImages[i].votes + ' votes, and was seen ' + ProductImage.allImages[i].views + ' times ' ;
+        ArrNames.push(ProductImage.allImages[i].name)
+        ArrVotes.push(ProductImage.allImages[i].votes)
+        ArrViews.push(ProductImage.allImages[i].views)
         }
+        let ctx = document.getElementById('myChart').getContext('2d');
+        let chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'bar',
+    
+        // The data for our dataset
+        data: {
+            labels: ArrNames,
+            datasets: [{
+                label: 'Votes',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: ArrVotes
+            },
+            {
+                label: "Views",
+                backgroundColor: 'rgba(99, 255, 132, 0.2)',
+                borderColor: 'rgba(99, 255, 132, 1)',
+                borderWidth: 1,
+                data: ArrViews,
+            }
+           
+        ]
+        },
+
+        // Configuration options go here
+        options: {
+            scales: {
+                yAxes: [{
+                   ticks: {
+                    min:0,
+                    max:10,
+                    stepSize: 1,
+                   }
+                }]
+             }
+        }
+    });    
+        
     }
+
+  
+    

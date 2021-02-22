@@ -1,10 +1,15 @@
 # Cookie-stand
 
 ## Synopsis 
-
+*Lab11*
 Create 3 side by side photos , that when a user click on one of them will retrieve another 3 photos and each time a user click on a photo it will saved as a vote for that photo, total clicks allowed is 25 times , after it's over it will show a button of view results that when you click will show results of views and votes for each photo.
-
 Object Constructor, Events , forms & tables included! 
+
+*lab12*
+Added a Chart -Done & .. 
+
+canvas incuded!
+
 
 ## Code Examples 
 
