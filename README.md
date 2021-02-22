@@ -6,7 +6,7 @@ Create 3 side by side photos , that when a user click on one of them will retrie
 Object Constructor, Events , forms & tables included! 
 
 *lab12*
-Added a Chart -Done & .. 
+Added a Chart & check that on each click photos rendered are not the same as the previous one .. 
 
 canvas incuded!
 

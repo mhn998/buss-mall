@@ -9,8 +9,7 @@ let userAttemptsCounter= 0;
 let leftImageindex;
 let middleImageindex;
 let rightImageindex;
-let prodResult; 
-let list;
+
 
 // constructor function
 function ProductImage (name,source) {
@@ -51,29 +50,41 @@ function generateRandomIndex() {
     return Math.floor(Math.random() * ProductImage.allImages.length);
 }
 
+
+let Previousleft = Math.floor(Math.random() * ProductImage.allImages.length);
+let Previousmiddle= Math.floor(Math.random() * ProductImage.allImages.length);
+let Previousright= Math.floor(Math.random() * ProductImage.allImages.length);
+
 // render three images
 function renderThreeImages() {
 
-    leftImageindex =generateRandomIndex();
-
+    do{
+        leftImageindex =generateRandomIndex();
+    } while (leftImageindex===Previousleft || leftImageindex===Previousmiddle || leftImageindex===Previousright)
+   
     do {
         rightImageindex = generateRandomIndex();
     } while 
-        (leftImageindex === rightImageindex)
+        (leftImageindex === rightImageindex || rightImageindex === Previousleft || rightImageindex === Previousmiddle || rightImageindex === Previousright)
 
     do {
         middleImageindex = generateRandomIndex();
-    } while (rightImageindex === middleImageindex || middleImageindex ===leftImageindex)    
+    } while (rightImageindex === middleImageindex || middleImageindex ===leftImageindex ||middleImageindex === Previousleft || middleImageindex ===Previousmiddle || middleImageindex === Previousright)    
 
-    leftimage.src= ProductImage.allImages[leftImageindex].source;
-    ProductImage.allImages[leftImageindex].views++
-    middleimage.src = ProductImage.allImages[middleImageindex].source;
-    ProductImage.allImages[middleImageindex].views++
-    rightimage.src = ProductImage.allImages[rightImageindex].source;    
-    ProductImage.allImages[rightImageindex].views++
+        // console.log(leftImageindex,middleImageindex,rightImageindex)
+        // console.log(Previousleft, Previousmiddle,Previousright)
+
+        leftimage.src= ProductImage.allImages[leftImageindex].source;
+        ProductImage.allImages[leftImageindex].views++
+        middleimage.src = ProductImage.allImages[middleImageindex].source;
+        ProductImage.allImages[middleImageindex].views++
+        rightimage.src = ProductImage.allImages[rightImageindex].source;    
+        ProductImage.allImages[rightImageindex].views++
+      
 }
 
 renderThreeImages();
+
 
 //handle clicking 
 imagecontainer.addEventListener('click',handleUSerClick);
@@ -81,6 +92,9 @@ imagecontainer.addEventListener('click',handleUSerClick);
 function handleUSerClick (event) {
     userAttemptsCounter++; 
     if (userAttemptsCounter<maxAttempts) {
+        Previousleft = leftImageindex;
+        Previousmiddle = middleImageindex;
+        Previousright = rightImageindex;
         // make sure to add to votes for the correct element and render again
         if(event.target.id === 'left-image') {
             ProductImage.allImages[leftImageindex].votes++
@@ -91,15 +105,12 @@ function handleUSerClick (event) {
         }
 
         renderThreeImages();
+        // console.log(Previousleft, Previousmiddle,Previousright)
 
 
     } else {
-        // render the list of resutls
-        list=document.getElementById("list-result");
-        let btn = document.createElement('button')
-        list.appendChild(btn);
-        btn.textContent = "View Results";
-        btn.addEventListener('click',trigger)
+        // render the chart
+        trigger();
         imagecontainer.removeEventListener('click',handleUSerClick);
 
     }
@@ -109,13 +120,9 @@ function handleUSerClick (event) {
 let ArrNames = [];
 let ArrVotes =[];
 let ArrViews =[];
-// This function will be triggered when clicked on the above created button after 25 times are completed
+// This function will be triggered when it reaches 25 times
 function trigger() {
     for (let i = 0;i<ProductImage.allImages.length;i++) {
-        // Old Code
-        // prodResult = document.createElement('li')
-        // list.appendChild(prodResult);
-        // prodResult.textContent = ProductImage.allImages[i].name + ' had ' + ProductImage.allImages[i].votes + ' votes, and was seen ' + ProductImage.allImages[i].views + ' times ' ;
         ArrNames.push(ProductImage.allImages[i].name)
         ArrVotes.push(ProductImage.allImages[i].votes)
         ArrViews.push(ProductImage.allImages[i].views)
