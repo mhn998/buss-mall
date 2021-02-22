@@ -9,19 +9,19 @@ let userAttemptsCounter= 0;
 let leftImageindex;
 let middleImageindex;
 let rightImageindex;
-let prodResult; 
-let list;
 
 
+// constructor function
 function ProductImage (name,source) {
     this.name = name;
     this.source = source;
-    this.votes=0
-    this.views = 0
+    this.votes=0;
+    this.views = 0;
     ProductImage.allImages.push(this);
 }
 
 ProductImage.allImages=[];
+
 
 new ProductImage("bag", "images/bag.jpg"); 
 new ProductImage("banana", "images/banana.jpg"); 
@@ -42,34 +42,49 @@ new ProductImage("water can", "images/water-can.jpg");
 new ProductImage("chair", "images/chair.jpg"); 
 new ProductImage("wine glass", "images/wine-glass.jpg"); 
 
+
+// console.log(ProductImage.allImages);
+
 // get random 
 function generateRandomIndex() {
     return Math.floor(Math.random() * ProductImage.allImages.length);
 }
 
+
+let Previousleft = Math.floor(Math.random() * ProductImage.allImages.length);
+let Previousmiddle= Math.floor(Math.random() * ProductImage.allImages.length);
+let Previousright= Math.floor(Math.random() * ProductImage.allImages.length);
+
 // render three images
 function renderThreeImages() {
 
-    leftImageindex =generateRandomIndex();
-
+    do{
+        leftImageindex =generateRandomIndex();
+    } while (leftImageindex===Previousleft || leftImageindex===Previousmiddle || leftImageindex===Previousright)
+   
     do {
         rightImageindex = generateRandomIndex();
     } while 
-        (leftImageindex === rightImageindex)
+        (leftImageindex === rightImageindex || rightImageindex === Previousleft || rightImageindex === Previousmiddle || rightImageindex === Previousright)
 
     do {
         middleImageindex = generateRandomIndex();
-    } while (rightImageindex === middleImageindex || middleImageindex ===leftImageindex)    
+    } while (rightImageindex === middleImageindex || middleImageindex ===leftImageindex ||middleImageindex === Previousleft || middleImageindex ===Previousmiddle || middleImageindex === Previousright)    
 
-    leftimage.src= ProductImage.allImages[leftImageindex].source;
-    ProductImage.allImages[leftImageindex].views++
-    middleimage.src = ProductImage.allImages[middleImageindex].source;
-    ProductImage.allImages[middleImageindex].views++
-    rightimage.src = ProductImage.allImages[rightImageindex].source;    
-    ProductImage.allImages[rightImageindex].views++
+        // console.log(leftImageindex,middleImageindex,rightImageindex)
+        // console.log(Previousleft, Previousmiddle,Previousright)
+
+        leftimage.src= ProductImage.allImages[leftImageindex].source;
+        ProductImage.allImages[leftImageindex].views++
+        middleimage.src = ProductImage.allImages[middleImageindex].source;
+        ProductImage.allImages[middleImageindex].views++
+        rightimage.src = ProductImage.allImages[rightImageindex].source;    
+        ProductImage.allImages[rightImageindex].views++
+      
 }
 
 renderThreeImages();
+
 
 //handle clicking 
 imagecontainer.addEventListener('click',handleUSerClick);
@@ -77,6 +92,9 @@ imagecontainer.addEventListener('click',handleUSerClick);
 function handleUSerClick (event) {
     userAttemptsCounter++; 
     if (userAttemptsCounter<maxAttempts) {
+        Previousleft = leftImageindex;
+        Previousmiddle = middleImageindex;
+        Previousright = rightImageindex;
         // make sure to add to votes for the correct element and render again
         if(event.target.id === 'left-image') {
             ProductImage.allImages[leftImageindex].votes++
@@ -87,25 +105,68 @@ function handleUSerClick (event) {
         }
 
         renderThreeImages();
+        // console.log(Previousleft, Previousmiddle,Previousright)
 
 
     } else {
-        // render the list of resutls
-        list=document.getElementById("list-result");
-        let btn = document.createElement('button')
-        list.appendChild(btn);
-        btn.textContent = "View Results";
-        btn.addEventListener('click',trigger)
+        // render the chart
+        trigger();
         imagecontainer.removeEventListener('click',handleUSerClick);
 
     }
 }
 
-// This function will be triggered when clicked on the above created button after 25 times are completed
+
+let ArrNames = [];
+let ArrVotes =[];
+let ArrViews =[];
+// This function will be triggered when it reaches 25 times
 function trigger() {
     for (let i = 0;i<ProductImage.allImages.length;i++) {
-        prodResult = document.createElement('li')
-        list.appendChild(prodResult);
-        prodResult.textContent = ProductImage.allImages[i].name + ' had ' + ProductImage.allImages[i].votes + ' votes, and was seen ' + ProductImage.allImages[i].views + ' times ' ;
+        ArrNames.push(ProductImage.allImages[i].name)
+        ArrVotes.push(ProductImage.allImages[i].votes)
+        ArrViews.push(ProductImage.allImages[i].views)
         }
+        let ctx = document.getElementById('myChart').getContext('2d');
+        let chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'bar',
+    
+        // The data for our dataset
+        data: {
+            labels: ArrNames,
+            datasets: [{
+                label: 'Votes',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: ArrVotes
+            },
+            {
+                label: "Views",
+                backgroundColor: 'rgba(99, 255, 132, 0.2)',
+                borderColor: 'rgba(99, 255, 132, 1)',
+                borderWidth: 1,
+                data: ArrViews,
+            }
+           
+        ]
+        },
+
+        // Configuration options go here
+        options: {
+            scales: {
+                yAxes: [{
+                   ticks: {
+                    min:0,
+                    max:10,
+                    stepSize: 1,
+                   }
+                }]
+             }
+        }
+    });    
+        
     }
+
+  
+    
