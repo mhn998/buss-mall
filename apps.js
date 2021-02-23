@@ -9,6 +9,7 @@ let userAttemptsCounter= 0;
 let leftImageindex;
 let middleImageindex;
 let rightImageindex;
+let data;
 
 
 // constructor function
@@ -42,6 +43,21 @@ new ProductImage("water can", "images/water-can.jpg");
 new ProductImage("chair", "images/chair.jpg"); 
 new ProductImage("wine glass", "images/wine-glass.jpg"); 
 
+
+function settingItems() {
+    data = JSON.stringify(ProductImage.allImages);
+    localStorage.setItem("productdata" , data);
+}
+
+// settingItems();
+
+
+function gettingItem() {
+    let stringdata = JSON.parse(localStorage.getItem("productdata"));
+    return stringdata;
+
+
+}
 
 // console.log(ProductImage.allImages);
 
@@ -109,6 +125,9 @@ function handleUSerClick (event) {
 
 
     } else {
+        console.log("this is before anything",ProductImage.allImages)
+        console.log(gettingItem());
+        // settingItems();
         // render the chart
         trigger();
         imagecontainer.removeEventListener('click',handleUSerClick);
@@ -122,11 +141,16 @@ let ArrVotes =[];
 let ArrViews =[];
 // This function will be triggered when it reaches 25 times
 function trigger() {
+    let newitem = gettingItem();
     for (let i = 0;i<ProductImage.allImages.length;i++) {
         ArrNames.push(ProductImage.allImages[i].name)
+        ProductImage.allImages[i].votes = ProductImage.allImages[i].votes+(newitem?newitem[i].votes:0)
+        ProductImage.allImages[i].views = ProductImage.allImages[i].views+(newitem?newitem[i].views:0)
         ArrVotes.push(ProductImage.allImages[i].votes)
         ArrViews.push(ProductImage.allImages[i].views)
         }
+        settingItems();
+        console.log(newitem);
         let ctx = document.getElementById('myChart').getContext('2d');
         let chart = new Chart(ctx, {
         // The type of chart we want to create
@@ -158,7 +182,7 @@ function trigger() {
                 yAxes: [{
                    ticks: {
                     min:0,
-                    max:10,
+                    max:30,
                     stepSize: 1,
                    }
                 }]
@@ -167,6 +191,3 @@ function trigger() {
     });    
         
     }
-
-  
-    
